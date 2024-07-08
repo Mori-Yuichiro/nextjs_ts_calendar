@@ -1,0 +1,25 @@
+.modal {
+    width: 400px;
+    height: 50vh;
+    border: solid 1px #000;
+    border-radius: 5px;
+    position: fixed;
+    top: 20%;
+    left: 35%;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.inputTask {
+    width: 70%;
+    margin-bottom: 30px;
+}
+
+.add_task {
+    width: 100%;
+}
