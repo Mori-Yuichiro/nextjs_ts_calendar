@@ -1,95 +1,70 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"
+
+import { format, isSameDay, isSameMonth } from "date-fns";
+import { ja } from "date-fns/locale";
+import style from "./styles/Toppage.module.css"
+import { useToppage } from "./hooks/useToppage";
+import { TaskModal } from "@/components/TaskModal";
+import Link from "next/link";
+
 
 export default function Home() {
+  const {
+    TODAY,
+    tasks,
+    showDate,
+    nextMonth,
+    prevMonth,
+    daysOfMonth,
+    isOpen,
+    toggleModalAndSelectDate,
+    selectedDate
+  } = useToppage();
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div className={style.contents}>
+      <Link href="/showWeek">週表示</Link>
+      <div className={style.calendar_header}>
+        <button onClick={prevMonth}>先月</button>
+        <p>{format(showDate, 'yyyy年M月', { locale: ja })}</p>
+        <button onClick={nextMonth}>来月</button>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      <table className={style.table}>
+        <thead>
+          <tr>
+            <th>日</th>
+            <th>月</th>
+            <th>火</th>
+            <th>水</th>
+            <th>木</th>
+            <th>金</th>
+            <th>土</th>
+          </tr>
+        </thead>
+        <tbody>
+          {daysOfMonth.map(dates => (
+            <tr key={`${dates}`}>
+              {dates.map(date => (
+                <td
+                  key={`${date}`}
+                  className={`
+                      ${isSameMonth(showDate, date) ? style.td_default : style.td_gray} 
+                      ${isSameDay(TODAY, date) && style.td_today} 
+                      ${tasks.find(task => task.date === format(date, 'yyyy-MM-dd')) && style.td_task}
+                    `}
+                >
+                  <p onClick={() => toggleModalAndSelectDate(date)}>{format(date, 'd', { locale: ja })}</p>
+                  <p>{tasks.find(task => task.date === format(date, 'yyyy-MM-dd'))?.task}</p>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {isOpen &&
+        <TaskModal
+          selectedDate={selectedDate}
+        />}
+    </div >
   );
 }

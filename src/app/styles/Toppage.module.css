@@ -1,0 +1,34 @@
+.calendar_header {
+    display: flex;
+    gap: 0 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+.contents {
+    text-align: center;
+}
+
+.table {
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+}
+
+.td_today {
+    background-color: rgb(118, 118, 233);
+    color: #fff;
+}
+
+.td_gray {
+    color: rgb(217, 212, 212);
+    cursor: pointer;
+}
+
+.td_default {
+    cursor: pointer;
+}
+
+.td_task {
+    border-bottom: solid 5px rgb(239, 123, 123);
+}
