@@ -1,11 +1,10 @@
 "use client"
 
-import { format } from "date-fns";
+import { format, isSameDay, isSameMonth } from "date-fns";
 import Link from "next/link";
 import { useShowWeek } from "./hooks/useShowWeek";
 import style from "./styles/page.module.css"
 import { TaskModal } from "@/components/TaskModal";
-import { ja } from "date-fns/locale";
 
 const ShowWeek = () => {
     const {
@@ -46,8 +45,8 @@ const ShowWeek = () => {
                             <td
                                 key={`${day}`}
                                 className={`
-                                    ${format(showDate, 'M', { locale: ja }) === format(day, 'M') ? style.td_default : style.td_gray}
-                                    ${format(TODAY, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd') && style.td_today}
+                                    ${isSameMonth(showDate, day) ? style.td_default : style.td_gray}
+                                    ${isSameDay(TODAY, day) && style.td_today}
                                     ${tasks.find(task => task.date === format(day, 'yyyy-MM-dd')) && style.td_task}
                                 `}
                             >
