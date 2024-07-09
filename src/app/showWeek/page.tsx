@@ -7,7 +7,7 @@ import style from "./styles/page.module.css"
 import { TaskModal } from "@/components/TaskModal";
 import { ja } from "date-fns/locale";
 
-const showWeek = () => {
+const ShowWeek = () => {
     const {
         TODAY,
         daysOfWeek,
@@ -65,4 +65,4 @@ const showWeek = () => {
     );
 }
 
-export default showWeek;
+export default ShowWeek;
