@@ -51,7 +51,7 @@ const ShowWeek = () => {
                                     ${tasks.find(task => task.date === format(day, 'yyyy-MM-dd')) && style.td_task}
                                 `}
                             >
-                                <p onClick={e => toggleModalAndSelectDate(e, day)}>
+                                <p onClick={() => toggleModalAndSelectDate(day)}>
                                     {format(day, "d")}
                                 </p>
                                 <p>{tasks.find(task => task.date === format(day, 'yyyy-MM-dd'))?.task}</p>

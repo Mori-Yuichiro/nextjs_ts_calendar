@@ -1,6 +1,6 @@
 "use client"
 
-import { format } from "date-fns";
+import { format, isSameDay, isSameMonth } from "date-fns";
 import { ja } from "date-fns/locale";
 import style from "./styles/Toppage.module.css"
 import { useToppage } from "./hooks/useToppage";
@@ -14,7 +14,7 @@ export default function Home() {
     tasks,
     showDate,
     nextMonth,
-    lastMonth,
+    prevMonth,
     daysOfMonth,
     isOpen,
     toggleModalAndSelectDate,
@@ -25,7 +25,7 @@ export default function Home() {
     <div className={style.contents}>
       <Link href="/showWeek">週表示</Link>
       <div className={style.calendar_header}>
-        <button onClick={lastMonth}>先月</button>
+        <button onClick={prevMonth}>先月</button>
         <p>{format(showDate, 'yyyy年M月', { locale: ja })}</p>
         <button onClick={nextMonth}>来月</button>
       </div>
@@ -48,12 +48,12 @@ export default function Home() {
                 <td
                   key={`${date}`}
                   className={`
-                      ${format(showDate, 'M', { locale: ja }) === format(date, 'M') ? style.td_default : style.td_gray} 
-                      ${format(TODAY, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd') && style.td_today} 
+                      ${isSameMonth(showDate, date) ? style.td_default : style.td_gray} 
+                      ${isSameDay(TODAY, date) && style.td_today} 
                       ${tasks.find(task => task.date === format(date, 'yyyy-MM-dd')) && style.td_task}
                     `}
                 >
-                  <p onClick={(e) => toggleModalAndSelectDate(e, date)}>{format(date, 'd', { locale: ja })}</p>
+                  <p onClick={() => toggleModalAndSelectDate(date)}>{format(date, 'd', { locale: ja })}</p>
                   <p>{tasks.find(task => task.date === format(date, 'yyyy-MM-dd'))?.task}</p>
                 </td>
               ))}

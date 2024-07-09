@@ -15,31 +15,28 @@ export const useShowWeek = () => {
         setShowDate(subWeeks(showDate, 1));
     }, [showDate])
 
-    const getCalendarWeekArray = useCallback((date: Date): Date[] => {
-        const firstDay: Date = startOfWeek(date);
-        const lastDay: Date = endOfWeek(date);
+    const getCalendarWeekArray = useCallback((): Date[] => {
+        const firstDay: Date = startOfWeek(showDate);
+        const lastDay: Date = endOfWeek(showDate);
         return eachDayOfInterval({ start: firstDay, end: lastDay });
-    }, [])
+    }, [showDate])
 
-    const [daysOfWeek, setDaysOfWeek] = useState<Date[]>(getCalendarWeekArray(showDate));
+    const [daysOfWeek, setDaysOfWeek] = useState<Date[]>(getCalendarWeekArray());
 
     // モーダル
     const { isOpen, setIsOpen } = useContext(IsOpenContext);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-    const toggleModalAndSelectDate = useCallback((e: React.MouseEvent<HTMLElement>, date: Date) => {
-        const selectYear: number = Number(format(date, 'yyyy'));
-        const selectMonth: number = Number(format(date, 'MM'));
-        const selectDay: number = Number(e.currentTarget.textContent as string);
+    const toggleModalAndSelectDate = useCallback((date: Date) => {
         setSelectedDate(
-            new Date(selectYear, selectMonth - 1, selectDay)
+            new Date(date)
         )
         setIsOpen(!isOpen);
     }, [isOpen])
 
 
     useEffect(() => {
-        setDaysOfWeek(getCalendarWeekArray(showDate));
+        setDaysOfWeek(getCalendarWeekArray());
     }, [showDate])
 
     return {

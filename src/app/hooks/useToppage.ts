@@ -13,35 +13,32 @@ export const useToppage = () => {
         setShowDate(addMonths(showDate, 1));
     }, [showDate])
 
-    const lastMonth = useCallback(() => {
+    const prevMonth = useCallback(() => {
         setShowDate(subMonths(showDate, 1))
     }, [showDate])
 
-    const getCalendarArray = useCallback((date: Date): Date[][] => {
-        const firstDay: Date = startOfMonth(date);
-        const lastDay: Date = endOfMonth(date);
+    const getCalendarArray = useCallback((): Date[][] => {
+        const firstDay: Date = startOfMonth(showDate);
+        const lastDay: Date = endOfMonth(showDate);
         const sundays: Date[] = eachWeekOfInterval({ start: firstDay, end: lastDay });
         return sundays.map(sunday => eachDayOfInterval({ start: sunday, end: endOfWeek(sunday) }))
     }, [showDate])
 
-    const [daysOfMonth, setDaysOfMonth] = useState<Date[][]>(getCalendarArray(showDate));
+    const [daysOfMonth, setDaysOfMonth] = useState<Date[][]>(getCalendarArray());
 
     // モーダル
     const { isOpen, setIsOpen } = useContext(IsOpenContext);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-    const toggleModalAndSelectDate = useCallback((e: React.MouseEvent<HTMLElement>, date: Date) => {
-        const selectYear: number = Number(format(date, 'yyyy'));
-        const selectMonth: number = Number(format(date, 'MM'));
-        const selectDay: number = Number(e.currentTarget.textContent as string);
+    const toggleModalAndSelectDate = useCallback((date: Date) => {
         setSelectedDate(
-            new Date(selectYear, selectMonth - 1, selectDay)
+            new Date(date)
         )
         setIsOpen(!isOpen);
     }, [isOpen])
 
     useEffect(() => {
-        setDaysOfMonth(getCalendarArray(showDate));
+        setDaysOfMonth(getCalendarArray());
     }, [showDate])
 
     return {
@@ -49,7 +46,7 @@ export const useToppage = () => {
         tasks,
         showDate,
         nextMonth,
-        lastMonth,
+        prevMonth,
         daysOfMonth,
         isOpen,
         toggleModalAndSelectDate,
