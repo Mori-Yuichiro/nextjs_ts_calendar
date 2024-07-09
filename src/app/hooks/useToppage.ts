@@ -1,10 +1,11 @@
-import { IsOpenContext, ShowDateContext } from "@/providers/CalendarProvider";
+import { IsOpenContext, ShowDateContext, TasksContext } from "@/providers/CalendarProvider";
 import { addMonths, eachDayOfInterval, eachWeekOfInterval, endOfMonth, endOfWeek, format, startOfMonth, subMonths } from "date-fns";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 
 export const useToppage = () => {
     const TODAY: Date = new Date();
+    const { tasks } = useContext(TasksContext);
 
     const { showDate, setShowDate } = useContext(ShowDateContext);
 
@@ -26,7 +27,6 @@ export const useToppage = () => {
     const [daysOfMonth, setDaysOfMonth] = useState<Date[][]>(getCalendarArray(showDate));
 
     // モーダル
-    // const [isOpen, setIsOpen] = useState<boolean>(false);
     const { isOpen, setIsOpen } = useContext(IsOpenContext);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
@@ -46,6 +46,7 @@ export const useToppage = () => {
 
     return {
         TODAY,
+        tasks,
         showDate,
         nextMonth,
         lastMonth,

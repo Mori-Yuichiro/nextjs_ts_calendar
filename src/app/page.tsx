@@ -5,14 +5,13 @@ import { ja } from "date-fns/locale";
 import style from "./styles/Toppage.module.css"
 import { useToppage } from "./hooks/useToppage";
 import { TaskModal } from "@/components/TaskModal";
-import { useContext } from "react";
-import { TasksContext } from "@/providers/CalendarProvider";
 import Link from "next/link";
 
 
 export default function Home() {
   const {
     TODAY,
+    tasks,
     showDate,
     nextMonth,
     lastMonth,
@@ -21,8 +20,6 @@ export default function Home() {
     toggleModalAndSelectDate,
     selectedDate
   } = useToppage();
-
-  const { tasks } = useContext(TasksContext);
 
   return (
     <div className={style.contents}>

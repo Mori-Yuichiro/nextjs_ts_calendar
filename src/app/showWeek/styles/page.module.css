@@ -1,0 +1,40 @@
+.show_week {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+}
+
+.btn_date {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.table_week {
+    width: 50%;
+}
+
+.tr_date {
+    text-align: center;
+}
+
+.td_today {
+    background-color: rgb(118, 118, 233);
+    color: #fff;
+}
+
+.td_gray {
+    color: rgb(217, 212, 212);
+    cursor: pointer;
+}
+
+.td_default {
+    cursor: pointer;
+}
+
+.td_task {
+    border-bottom: solid 5px rgb(239, 123, 123);
+}

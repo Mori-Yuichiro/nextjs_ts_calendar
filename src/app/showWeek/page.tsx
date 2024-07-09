@@ -1,44 +1,34 @@
 "use client"
 
-import { ShowDateContext } from "@/providers/CalendarProvider";
-import { addWeeks, eachDayOfInterval, endOfWeek, format, startOfWeek, subWeeks } from "date-fns";
+import { format } from "date-fns";
 import Link from "next/link";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useShowWeek } from "./hooks/useShowWeek";
+import style from "./styles/page.module.css"
+import { TaskModal } from "@/components/TaskModal";
+import { ja } from "date-fns/locale";
 
 const showWeek = () => {
-    const { showDate, setShowDate } = useContext(ShowDateContext);
-
-    const nextWeek = useCallback(() => {
-        setShowDate(addWeeks(showDate, 1));
-    }, [showDate])
-
-    const lastWeek = useCallback(() => {
-        setShowDate(subWeeks(showDate, 1));
-    }, [showDate])
-
-    const getCalendarWeekArray = useCallback((date: Date): Date[] => {
-        const firstDay: Date = startOfWeek(date);
-        const lastDay: Date = endOfWeek(date);
-        return eachDayOfInterval({ start: firstDay, end: lastDay });
-    }, [])
-
-    const [daysOfWeek, setDaysOfWeek] = useState<Date[]>(getCalendarWeekArray(showDate));
-
-
-
-    useEffect(() => {
-        setDaysOfWeek(getCalendarWeekArray(showDate));
-    }, [showDate])
+    const {
+        TODAY,
+        daysOfWeek,
+        showDate,
+        tasks,
+        nextWeek,
+        lastWeek,
+        isOpen,
+        selectedDate,
+        toggleModalAndSelectDate
+    } = useShowWeek();
 
     return (
-        <div>
+        <div className={style.show_week}>
             <Link href="/">月表示</Link>
-            <div>
+            <div className={style.btn_date}>
                 <button onClick={lastWeek}>先週</button>
                 <p>{format(showDate, 'yyyy-MM')}</p>
                 <button onClick={nextWeek}>来週</button>
             </div>
-            <table>
+            <table className={style.table_week}>
                 <thead>
                     <tr>
                         <th>日</th>
@@ -51,13 +41,26 @@ const showWeek = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr className={style.tr_date}>
                         {daysOfWeek.map(day => (
-                            <td key={`day-${day}`}>{format(day, "d")}</td>
+                            <td
+                                key={`${day}`}
+                                className={`
+                                    ${format(showDate, 'M', { locale: ja }) === format(day, 'M') ? style.td_default : style.td_gray}
+                                    ${format(TODAY, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd') && style.td_today}
+                                    ${tasks.find(task => task.date === format(day, 'yyyy-MM-dd')) && style.td_task}
+                                `}
+                            >
+                                <p onClick={e => toggleModalAndSelectDate(e, day)}>
+                                    {format(day, "d")}
+                                </p>
+                                <p>{tasks.find(task => task.date === format(day, 'yyyy-MM-dd'))?.task}</p>
+                            </td>
                         ))}
                     </tr>
                 </tbody>
             </table>
+            {isOpen && <TaskModal selectedDate={selectedDate} />}
         </div>
     );
 }
